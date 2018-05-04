@@ -1,0 +1,84 @@
+h1. correios-api
+
+correios-api é uma API de webservices REST e Ruby para rastrear encomendas dos Correios. 
+
+Esta API faz requests e parse no HTML do site dos correios para fornecer informações 
+sobre encomendas.
+
+Para mais informações acesse o "site do projeto":http://guilhermechapiewski.github.com/correios-api.
+
+h2. Usando a API Rest
+
+Se você acessar o endereço:
+
+  http://localhost:4567/encomenda/ES446391025BR
+
+Você receberá um XML com os dados da encomenda "ES446391025BR":
+
+<pre>
+<? xml encoding="UTF-8" version="1.0" ?>
+<encomenda numero="ES446391025BR">
+  <status data="2009-01-27T16:35:00+00:00">
+    <local>ACF FENIX - ITAPECERICA DA SERRA/SP</local>
+    <situacao>Postado</situacao>
+    <detalhes></detalhes>
+  </status>
+  <status data="2009-01-27T18:51:00+00:00">
+    <local>ACF FENIX - ITAPECERICA DA SERRA/SP</local>
+    <situacao>Encaminhado</situacao>
+    <detalhes>Em trânsito para CTE JAGUARE - SAO PAULO/SP</detalhes>
+  </status>
+  <status data="2009-01-28T03:36:00+00:00">
+    <local>CTE JAGUARE - SAO PAULO/SP</local>
+    <situacao>Encaminhado</situacao>
+    <detalhes>Encaminhado para CTE SAUDE - SAO PAULO/SP</detalhes>
+  </status>
+  <status data="2009-01-28T06:40:00+00:00">
+    <local>CTE SAUDE - SAO PAULO/SP</local>
+    <situacao>Encaminhado</situacao>
+    <detalhes>Encaminhado para CEE MOEMA - SAO PAULO/SP</detalhes>
+  </status>
+  <status data="2009-01-28T14:17:00+00:00">
+    <local>CEE MOEMA - SAO PAULO/SP</local>
+    <situacao>Saiu para entrega</situacao>
+    <detalhes></detalhes>
+  </status>
+  <status data="2009-01-28T17:49:00+00:00">
+    <local>CEE MOEMA - SAO PAULO/SP</local>
+    <situacao>Entregue</situacao>
+    <detalhes></detalhes>
+  </status>
+</encomenda>
+</pre>
+
+h2. Usando a API Ruby
+
+<pre>
+require "rubygems"
+require "correios"
+encomenda = Correios.encomenda("ES446391025BR")
+puts encomenda.numero
+encomenda.status.each do |status|
+  puts status.data
+  puts status.local
+  puts status.situacao
+  puts status.detalhes
+end
+</pre>
+  
+Outra forma de uso útil:
+
+<pre>
+encomenda = Correios.encomenda("ES446391025BR")
+puts encomenda.ultimo_status_disponivel.to_s
+</pre>
+
+h2. Números de rastreamento para teste
+
+Outros números de encomenda para teste:
+
+  * RO811226537BR
+  * EC834786906BR
+  * SO376590583BR
+  * EC884014459BR
+  * EC726225124BR
